@@ -101,7 +101,7 @@ class Board:
         if self.height != DEFAULT_HEIGHT or self.width != DEFAULT_WIDTH:
             string_length = len(f"Starting the game with a board of {self.height}x{self.width}")
             spacing = (((self.width * COLUMN_WIDTH) + 1) - string_length) // 2
-            print(" " * spacing, end=f"Starting the game with a board of {self.height}x{self.width}\n")
+            print(" " * spacing, end=f"Starting the game with a board of {self.height}x{self.width}\n\n")
 
     def get_empty_columns(self):
         empty_columns = []
@@ -243,7 +243,7 @@ your piece into. Get 4 in a row and you win!\n"""
         self.board.update_board(turn, self.player)
         self.board.print_current_board()
     
-    def one_round_player_start(self):
+    def player_start(self):
         self.player_turn()
         if self.check_game_over():
             return
@@ -253,7 +253,7 @@ your piece into. Get 4 in a row and you win!\n"""
             if self.check_game_over():
                 return
 
-    def one_round_computer_start(self):
+    def computer_start(self):
         if not self.hard:
             self.easy_computer_turn()
             if self.check_game_over():
@@ -332,17 +332,17 @@ your piece into. Get 4 in a row and you win!\n"""
     
     def check_rising_diagonal(self):
         spots = self.board.board_spots
-        for row in range(self.board.height - 3):
+        for row in range(self.board.height - 1, 2, -1):
             for col in range(self.board.width - 3):
-                if spots[row][col] == RED_CIRCLE and \
-                    spots[row + 1][col + 1] == RED_CIRCLE and \
-                        spots[row + 2][col + 2] == RED_CIRCLE and \
-                            spots[row + 3][col + 3] == RED_CIRCLE:
+                if (spots[row][col] == RED_CIRCLE and \
+                    spots[row - 1][col + 1] == RED_CIRCLE and \
+                        spots[row - 2][col + 2] == RED_CIRCLE and \
+                            spots[row - 3][col + 3] == RED_CIRCLE):
                     return True, RED_CIRCLE
-                elif spots[row][col] == YELLOW_CIRCLE and \
-                    spots[row + 1][col + 1] == YELLOW_CIRCLE and \
-                        spots[row + 2][col + 2] == YELLOW_CIRCLE and \
-                            spots[row + 3][col + 3] == YELLOW_CIRCLE:
+                elif (spots[row][col] == YELLOW_CIRCLE and \
+                    spots[row - 1][col + 1] == YELLOW_CIRCLE and \
+                        spots[row - 2][col + 2] == YELLOW_CIRCLE and \
+                            spots[row - 3][col + 3] == YELLOW_CIRCLE):
                     return True, YELLOW_CIRCLE
         return False, None
     
@@ -414,15 +414,16 @@ def main():
         # Reset game to play again after first
         if connect_four.games > 0:
             connect_four.reset_game()
+            connect_four.board.print_default_board()
         # Randomly choose who goes first each game
         who_first = connect_four.determine_first()
 
         while not connect_four.check_game_over():
             # Turn order changes depending on who first
             if who_first == connect_four.player:
-                connect_four.one_round_player_start()
+                connect_four.player_start()
             else:
-                connect_four.one_round_computer_start()
+                connect_four.computer_start()
         # Once the game is over, update/print scores
         connect_four.end_game()
 
