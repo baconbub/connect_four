@@ -2,7 +2,7 @@
 Game Name: Connect Four
 Description: Get four in a row to win!
 Author: Zachary Coe
-Date: 2024-10-16
+Date: 2024-10-21
 """
 
 
@@ -31,7 +31,7 @@ COLUMN_WIDTH = 6
 DOUBLE_DIGIT_INT = 10
 EMPTY_SPACE = " "
 
-MAX_DEPTH = 4
+MAX_DEPTH = 3
 
 
 
