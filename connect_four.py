@@ -24,14 +24,14 @@ TWO = 2
 TWO_ROW_SCORE = 100
 THREE_ROW_SCORE = 250
 BLOCK_SCORE = 300
+WINNER_SCORE = 1000
 # Length of longer line in instructions
 SPACE_OVER = 44
 COLUMN_WIDTH = 6
 DOUBLE_DIGIT_INT = 10
 EMPTY_SPACE = " "
-WINNER_SCORE = 1000
-LOSER_SCORE = -1000
-MAX_DEPTH = 3
+
+MAX_DEPTH = 4
 
 
 
@@ -483,9 +483,9 @@ class Game:
         is_winner, winner = self.check_for_winner()
         if is_winner:
             if winner == self.computer.color:
-                return WINNER_SCORE
+                return WINNER_SCORE - (depth * 5)
             elif winner == self.player.color:
-                return LOSER_SCORE
+                return -WINNER_SCORE + (depth * 5)
         
         # A tie
         if self.board.is_board_full():
@@ -527,7 +527,18 @@ class Game:
         best_move = -1
         empty_columns = self.board.get_empty_columns()
 
-        for col in range(self.board.width):
+        # Sets up an alternating move checker
+        # prioritizing middle of the board and
+        # moving outwards from there
+        middle = self.board.width // 2
+        columns = [middle]
+        for n in range(1, middle + 1):
+            if middle + n < self.board.width:
+                columns.append(middle + n)
+            if middle - n >= 0:
+                columns.append(middle - n)
+
+        for col in columns:
             if col in empty_columns:
                 self.board.update_board(col, self.computer)
 
